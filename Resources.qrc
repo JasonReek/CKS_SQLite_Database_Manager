@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Database/LeakDetectionDatabase.db</file>
+        <file>Resources/Icons/column_cube.png</file>
+        <file>Resources/Icons/filter.png</file>
+        <file>Resources/Icons/key.png</file>
+        <file>Resources/Icons/locked.png</file>
+        <file>Resources/Icons/sql.png</file>
+        <file>Resources/Icons/table.png</file>
+        <file>Resources/Icons/db.png</file>
+        <file>Resources/Icons/refresh.png</file>
+        <file>Resources/Icons/blank.png</file>
+        <file>Resources/Icons/case.png</file>
+        <file>Resources/Icons/date.png</file>
+        <file>Resources/Icons/delete_row.png</file>
+        <file>Resources/Icons/remove_table.png</file>
+        <file>Resources/Icons/add_table.png</file>
+        <file>Resources/Icons/new_db.png</file>
+        <file>Resources/Icons/export.png</file>
+        <file>Resources/Icons/insert.png</file>
+        <file>Resources/Icons/convert.png</file>
+        <file>Resources/Icons/read_write.png</file>
+    </qresource>
+</RCC>

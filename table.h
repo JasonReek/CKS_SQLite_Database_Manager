@@ -65,6 +65,19 @@ namespace SQLProperties
     const int LESS_OR_EQUAL_THAN = 4;
     const int BETWEEN = 5;
 
+    const QStringList READ_COMMANDS = {QStringLiteral("AND"), QStringLiteral("BEGIN"), QStringLiteral("BETWEEN"),
+                                       QStringLiteral("EXISTS"), QStringLiteral("IN"), QStringLiteral("NOT"),
+                                       QStringLiteral("LIKE"), QStringLiteral("INTO"), QStringLiteral("INDEX"),
+                                       QStringLiteral("GLOB"), QStringLiteral("OR"), QStringLiteral("IS"),
+                                       QStringLiteral("UNIQUE"), QStringLiteral("NULL"), QStringLiteral("NULL"),
+                                       QStringLiteral("SELECT"), QStringLiteral("BEFORE"), QStringLiteral("PRIMARY"),
+                                       QStringLiteral("FROM"), QStringLiteral("TABLE"), QStringLiteral("WHERE"),
+                                       QStringLiteral("KEY"), QStringLiteral("VIRTUAL"), QStringLiteral("VIEW"), QStringLiteral("BY"),
+                                       QStringLiteral("COUNT"), QStringLiteral("EXISTS"), QStringLiteral("GROUP"), QStringLiteral("INNER"),
+                                       QStringLiteral("JOIN"), QStringLiteral("HAVING"), QStringLiteral("VALUES"),
+                                       QStringLiteral("ORDER"), QStringLiteral("PRAGMA"), QStringLiteral("RELEASE"), QStringLiteral("ON")};
+
+
     const QStringList WRITE_COMMANDS = {QStringLiteral("AS"), QStringLiteral("DROP"), QStringLiteral("UPDATE"),
                                         QStringLiteral("INSERT"), QStringLiteral("DELETE"), QStringLiteral("CREATE"),
                                       QStringLiteral("ALTER"), QStringLiteral("RENAME"), QStringLiteral("COMMIT"),

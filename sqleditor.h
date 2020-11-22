@@ -52,7 +52,6 @@
 #define SQLEDITOR_H
 
 #include "iconlabel.h"
-#include "table.h"
 #include "highlighter.h"
 
 #include <iostream>

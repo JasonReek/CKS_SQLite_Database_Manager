@@ -571,8 +571,8 @@ void MainWindow::createCompleterSheet()
     QStringList table_names = this->table->tableNames();
     QStringList column_names;
     int table_count = table_names.length();
-    int sql_read_cmd_count = SQLCommands::READ_COMMANDS.length();
-    int sql_write_cmd_count = SQLCommands::WRITE_COMMANDS.length();
+    int sql_read_cmd_count = SQLProperties::READ_COMMANDS.length();
+    int sql_write_cmd_count = SQLProperties::WRITE_COMMANDS.length();
     QStringList words_used = {};
     QString word;
 
@@ -580,7 +580,7 @@ void MainWindow::createCompleterSheet()
     // Write SQL Read/Write Commands
     for(int i = 0; i < sql_read_cmd_count; i++)
     {
-        word = SQLCommands::READ_COMMANDS[i];
+        word = SQLProperties::READ_COMMANDS[i];
         if(!words_used.contains(word) && word.length() > 2)
             writer.writeRow({word});
         words_used.append(word);
@@ -588,7 +588,7 @@ void MainWindow::createCompleterSheet()
 
     for(int i = 0; i < sql_write_cmd_count; i++)
     {
-        word = SQLCommands::WRITE_COMMANDS[i];
+        word = SQLProperties::WRITE_COMMANDS[i];
         if(!words_used.contains(word) && word.length() > 2)
             writer.writeRow({word});
         words_used.append(word);
@@ -631,8 +631,8 @@ QAbstractItemModel *MainWindow::createCompleterListModel()
     QStringList table_names = this->table->tableNames();
     QStringList column_names;
     int table_count = table_names.length();
-    int sql_read_cmd_count = SQLCommands::READ_COMMANDS.length();
-    int sql_write_cmd_count = SQLCommands::WRITE_COMMANDS.length();
+    int sql_read_cmd_count = SQLProperties::READ_COMMANDS.length();
+    int sql_write_cmd_count = SQLProperties::WRITE_COMMANDS.length();
     QStringList words = {};
     QMap <QString, int> icons = {};
     QString word;
@@ -641,7 +641,7 @@ QAbstractItemModel *MainWindow::createCompleterListModel()
     // Get SQL read command strings
     for(int i = 0; i < sql_read_cmd_count; i++)
     {
-        word = SQLCommands::READ_COMMANDS[i];
+        word = SQLProperties::READ_COMMANDS[i];
         if(!words.contains(word) && word.length() > 2)
         {
             words.append(word);
@@ -652,7 +652,7 @@ QAbstractItemModel *MainWindow::createCompleterListModel()
     // Get SQL write command strings
     for(int i = 0; i < sql_write_cmd_count; i++)
     {
-        word = SQLCommands::WRITE_COMMANDS[i];
+        word = SQLProperties::WRITE_COMMANDS[i];
         if(!words.contains(word) && word.length() > 2)
         {
             words.append(word);

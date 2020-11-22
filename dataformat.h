@@ -22,7 +22,7 @@ const QString M = QStringLiteral("M");           // Month with no leading zeros
 const QString MM = QStringLiteral("MM");         // Month with leading zeros
 const QString MON = QStringLiteral("Mon");       // Month abreviated name
 const QString MONTH = QStringLiteral("Month");   // Month full name
-const QString YYYY = QStringLiteral("YYYY");
+const QString YYYY = QStringLiteral("YYYY");     // Year
 
 const QMap<QString, QString> MONTH_ABRV_TO_NUMBER
 {

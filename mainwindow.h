@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 //#include "database.h"
-#include "sqleditor.h"
 #include "newtabledialog.h"
 
 #include <QGridLayout>

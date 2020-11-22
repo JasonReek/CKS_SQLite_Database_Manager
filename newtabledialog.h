@@ -1,7 +1,7 @@
 #ifndef NEWTABLEDIALOG_H
 #define NEWTABLEDIALOG_H
 
-#include "table.h"
+#include "sqleditor.h"
 
 #include <QDialog>
 #include <QWidget>

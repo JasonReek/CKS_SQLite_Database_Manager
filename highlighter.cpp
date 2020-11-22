@@ -28,7 +28,7 @@ void Highlighter::setSQLCommands()
 
     this->sqlReadFormat.setForeground(QColor("#00CCFF"));
 
-    const QStringList sqlReadPatterns = this->createRegexList(SQLCommands::READ_COMMANDS);
+    const QStringList sqlReadPatterns = this->createRegexList(SQLProperties::READ_COMMANDS);
 
     for (const QString &pattern : sqlReadPatterns)
     {
@@ -39,7 +39,7 @@ void Highlighter::setSQLCommands()
 
     this->sqlWriteFormat.setForeground(QColor("#FF0000"));
 
-    const QStringList sqlWritePatterns = this->createRegexList(SQLCommands::WRITE_COMMANDS);
+    const QStringList sqlWritePatterns = this->createRegexList(SQLProperties::WRITE_COMMANDS);
 
     for (const QString &pattern : sqlWritePatterns)
     {

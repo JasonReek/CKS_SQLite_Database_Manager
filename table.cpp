@@ -18,6 +18,7 @@ Table::Table(QWidget *parent) : QTableView(parent)
     this->_database = QSqlDatabase::addDatabase("QSQLITE");
     //this->database.setDatabaseName(path);
     this->q_model = new QSqlQueryModel(this);
+    this->access_q_model = new QSqlQueryModel(this);
 }
 
 Table::DatabaseType Table::databaseType()

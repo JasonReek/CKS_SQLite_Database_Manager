@@ -1,7 +1,6 @@
 #ifndef ICONLABEL_H
 #define ICONLABEL_H
 
-#include <QWidget>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QSizePolicy>
@@ -13,7 +12,8 @@ enum IconIds
     COLUMN_ID,
     KEY_ID,
     FILTER_ID,
-    SQL_ID
+    SQL_ID,
+    FUNC_ID,
 };
 
 namespace Icons
@@ -36,7 +36,15 @@ namespace Icons
     const QString INSERT_ICON = QStringLiteral(":/Resources/Icons/insert.png");
     const QString CONVERT_ICON = QStringLiteral(":/Resources/Icons/convert.png");
     const QString RW_ICON = QStringLiteral(":/Resources/Icons/read_write.png");
-
+    const QString CICADA_ICON = QStringLiteral(":/Resources/Icons/cicada.png");
+    const QString ITRON_ICON = QStringLiteral(":/Resources/Icons/itron.png");
+    const QString FUNC_ICON = QStringLiteral(":/Resources/Icons/function.png");
+    const QString SQLITE_ICON = QStringLiteral(":/Resources/Icons/sqlite.png");
+    const QString SQL_EDIT_ICON = QStringLiteral(":/Resources/Icons/sqledit.png");
+    const QString SQL_TUT_ICON = QStringLiteral(":/Resources/Icons/tutorial.png");
+    const QString IMPORT_FILE_ICON = QStringLiteral(":/Resources/Icons/import.png");
+    const QString IMPORT_MENU_ICON = QStringLiteral(":/Resources/Icons/import_menu.png");
+    const QString ACCESS_DB_ICON = QStringLiteral(":/Resources/Icons/access_db.png");
 }
 
 class IconLabel : public QWidget

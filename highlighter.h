@@ -1,7 +1,8 @@
 #ifndef HIGHLIGHTER_H
 #define HIGHLIGHTER_H
 
-#include "table.h"
+#include "importdialog.h"
+
 #include <QSyntaxHighlighter>
 #include <QTextDocument>
 #include <QRegularExpression>
@@ -30,6 +31,7 @@ private:
     QTextCharFormat sqlWriteFormat;
     QTextCharFormat tableFormat;
     QTextCharFormat columnFormat;
+    QTextCharFormat funcFormat;
     QStringList createRegexList(QStringList list);
 
 signals:

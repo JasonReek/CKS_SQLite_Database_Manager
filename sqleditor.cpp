@@ -5,10 +5,14 @@ SQLEditor::SQLEditor(Table *table, QWidget *parent) : QTextEdit(parent)
     this->setAcceptRichText(false);
     this->preserved_model = new QStandardItemModel(this);
     this->last_text = "";
-    this->period_selection = false;
-    this->using_other_model = false;
-    this->menu_popped_up = false;
+    this->char_typed = NULL;
+    this->last_char_typed = NULL;
+    this->using_table_columns_model = false;
+    this->using_function_model = false;
+    this->using_sql_command_model = false;
+    this->menu_visible = false;
     this->menu_clicked = false;
+
 
     this->_table = table;
     QPalette palette = this->palette();
@@ -17,6 +21,7 @@ SQLEditor::SQLEditor(Table *table, QWidget *parent) : QTextEdit(parent)
     this->setPalette(palette);
 
     this->highlighter = new Highlighter(this->document());
+
 }
 
 SQLEditor::~SQLEditor()
@@ -47,7 +52,7 @@ void SQLEditor::setCompleter(QCompleter *completer)
     c->setCompletionMode(QCompleter::PopupCompletion);
     c->setCaseSensitivity(Qt::CaseInsensitive);
     connect(c, QOverload<const QString &>::of(&QCompleter::activated),this, &SQLEditor::insertCompletion);
-    connect(c, QOverload<const QModelIndex &>::of(&QCompleter::highlighted), this, &SQLEditor::checkIfModelChanged);
+    connect(static_cast<PopupList*>(c->popup()), &PopupList::visibilityChanged, this, &SQLEditor::popupStatus);
 }
 
 void SQLEditor::insertCompletion(const QString &completion)
@@ -63,10 +68,14 @@ void SQLEditor::insertCompletion(const QString &completion)
     tc.movePosition(QTextCursor::EndOfWord);
     tc.select(QTextCursor::WordUnderCursor);
     tc.removeSelectedText();
+    if(this->using_sql_command_model || this->using_function_model)
+    {
+        tc.deletePreviousChar();
+        tc.deletePreviousChar();
+    }
     tc.insertText(completion.right(extra));
+
     setTextCursor(tc);
-    if(this->using_other_model)
-        this->c->setModel(this->thawModel());
 }
 
 QString SQLEditor::textUnderCursor() const
@@ -86,6 +95,7 @@ void SQLEditor::focusInEvent(QFocusEvent *e)
 void SQLEditor::keyPressEvent(QKeyEvent *e)
 {
     QStringList column_names;
+    QStringList sql_commands;
     QStandardItemModel *model = nullptr;
 
     if (c && c->popup()->isVisible())
@@ -104,13 +114,6 @@ void SQLEditor::keyPressEvent(QKeyEvent *e)
            break;
        }
     }
-    if(this->menu_popped_up)
-    {
-        if(this->using_other_model)
-            this->c->setModel(this->thawModel());
-        this->menu_popped_up = false;
-    }
-
     const bool isShortcut = (e->modifiers().testFlag(Qt::ControlModifier) && e->key() == Qt::Key_E); // CTRL+E
     if (!c || !isShortcut) // do not process the shortcut when we have a completer
         QTextEdit::keyPressEvent(e);
@@ -120,11 +123,59 @@ void SQLEditor::keyPressEvent(QKeyEvent *e)
     if (!c || (ctrlOrShift && e->text().isEmpty()))
         return;
 
-    static QString eow("~!@#$%^&*()+{}|:\".<>?,/;'[]\\-="); // end of word
+    static QString eow("~!@#$%^&*()+{}|:\"<>,?.;/'[]\\-="); // end of word
     const bool hasModifier = (e->modifiers() != Qt::NoModifier) && !ctrlOrShift;
     QString completionPrefix = textUnderCursor();
 
-    if(e->text().right(1) == ".")
+    this->char_typed = e->text().right(1).toStdString()[0];
+
+    // Bring up complete command list.
+
+    if(this->char_typed == '?' && this->last_char_typed == '?' && !this->using_sql_command_model)
+    {
+        model = new QStandardItemModel(this->c);
+
+        sql_commands = SQLProperties::READ_COMMANDS;
+        sql_commands.append(SQLProperties::WRITE_COMMANDS);
+        sql_commands.sort(Qt::CaseInsensitive);
+
+        model->setRowCount(sql_commands.length());
+        model->setColumnCount(1);
+
+        for(int i = 0; i < sql_commands.length(); i++)
+        {
+            QStandardItem* item = new QStandardItem(sql_commands.at(i));
+            item->setIcon(QIcon(QIcon(Icons::SQL_ICON)).pixmap(16,16));
+            //item->setToolTip("some tool tip");
+            model->setItem(i, 0, item);
+        }
+        c->setModel(model);
+        this->using_sql_command_model = true;
+    }
+
+
+    // Bring up complete function list.
+    else if(this->char_typed == '/' && this->last_char_typed == '.' && !this->using_function_model)
+    {
+        model = new QStandardItemModel(this->c);
+
+        sql_commands = SQLProperties::FUNCTIONS;
+        sql_commands.sort(Qt::CaseInsensitive);
+
+        model->setRowCount(sql_commands.length());
+        model->setColumnCount(1);
+
+        for(int i = 0; i < sql_commands.length(); i++)
+        {
+            QStandardItem* item = new QStandardItem(sql_commands.at(i));
+            item->setIcon(QIcon(QIcon(Icons::FUNC_ICON)).pixmap(16,16));
+            //item->setToolTip("some tool tip");
+            model->setItem(i, 0, item);
+        }
+        c->setModel(model);
+        this->using_function_model = true;
+    }
+    else if(this->char_typed == '.' && !this->using_table_columns_model)
     {
         QTextCursor tc = this->textCursor();
         tc.movePosition(QTextCursor::Left);
@@ -134,41 +185,36 @@ void SQLEditor::keyPressEvent(QKeyEvent *e)
 
         if(this->_table->tableNames().contains(this->last_text))
         {
-            // Catches if the user fumbles with text entry. This prevents model overwrite.
-            if(this->using_other_model)
-                this->c->setModel(this->thawModel());
-            else
+            model = new QStandardItemModel(this->c);
+            column_names = this->_table->columnNames(this->last_text);
+            column_names.sort(Qt::CaseInsensitive);
+            model->setRowCount(column_names.length());
+            model->setColumnCount(1);
+
+            for(int i = 0; i < column_names.length(); i++)
             {
-                this->period_selection = true;
-                this->preserveModel(this->c->model());
-                model = new QStandardItemModel(this->c);
-                column_names = this->_table->columnNames(this->last_text);
-                column_names.sort(Qt::CaseInsensitive);
-                model->setRowCount(column_names.length());
-                model->setColumnCount(1);
-
-                for(int i = 0; i < column_names.length(); i++)
-                {
-                    QStandardItem* item = new QStandardItem(column_names[i]);
-                    item->setIcon(QIcon(QIcon(Icons::COLUMN_ICON)).pixmap(16,16));
-                    //item->setToolTip("some tool tip");
-                    model->setItem(i, 0, item);
-                }
-                c->setModel(model);
-                this->using_other_model = true;
+                QStandardItem* item = new QStandardItem(column_names.at(i));
+                item->setIcon(QIcon(QIcon(Icons::COLUMN_ICON)).pixmap(16,16));
+                //item->setToolTip("some tool tip");
+                model->setItem(i, 0, item);
             }
+            c->setModel(model);
+            this->using_table_columns_model = true;
         }
-
     }
+    else if(this->isUsingOtherModel())
+        this->c->setModel(this->thawModel());
+
     if (!isShortcut && (hasModifier || e->text().isEmpty() || completionPrefix.length() < 3 || eow.contains(e->text().right(1))))
     {
-        if(!this->period_selection)
+        if(!charTypedWhileUsingItsModel())
         {
+            this->last_char_typed = this->char_typed;
             c->popup()->hide();
             return;
         }
-        this->period_selection = false;
     }
+    this->last_char_typed = this->char_typed;
 
     if (completionPrefix != c->completionPrefix())
     {
@@ -188,7 +234,21 @@ QCompleter *SQLEditor::completer() const
 
 bool SQLEditor::isUsingOtherModel()
 {
-    return this->using_other_model;
+    return (this->using_table_columns_model || this->using_sql_command_model || this->using_function_model);
+}
+
+bool SQLEditor::charTypedWhileUsingItsModel()
+{
+    if(this->isUsingOtherModel())
+    {
+        if(this->last_char_typed == '?' && this->char_typed == '?' && this->using_sql_command_model)
+            return true;
+        if(this->last_char_typed == '.' && this->char_typed == '/' && this->using_function_model)
+            return true;
+        if(this->char_typed == '.' && this->using_table_columns_model)
+            return true;
+    }
+    return false;
 }
 
 void SQLEditor::preserveModel(QAbstractItemModel *model)
@@ -205,15 +265,28 @@ void SQLEditor::preserveModel(QAbstractItemModel *model)
 
 QAbstractItemModel *SQLEditor::thawModel()
 {
+    QString text;
     QStandardItemModel *model = new QStandardItemModel(this->c);
     for(int row = 0; row < this->preserved_model->rowCount(); row++)
+    {
         model->appendRow(this->preserved_model->item(row)->clone());
-    this->using_other_model = false;
+        text = this->preserved_model->item(row)->text();
+    }
+    this->using_table_columns_model = false;
+    this->using_sql_command_model = false;
+    this->using_function_model = false;
     return model;
 }
 
-void SQLEditor::checkIfModelChanged(const QModelIndex &index)
+void SQLEditor::popupStatus(bool visible)
 {
-    this->menu_popped_up = true;
-
+   if(visible)
+   {
+       this->menu_visible = visible;
+   }
+   else
+   {
+       this->menu_visible = visible;
+       this->menu_clicked = false;
+   }
 }

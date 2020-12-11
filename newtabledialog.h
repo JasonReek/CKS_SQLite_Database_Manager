@@ -4,23 +4,16 @@
 #include "sqleditor.h"
 
 #include <QDialog>
-#include <QWidget>
-#include <QGroupBox>
 #include <QFormLayout>
 #include <QHBoxLayout>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QComboBox>
-#include <QTableWidget>
 #include <QRegExp>
 #include <QRegExpValidator>
 #include <QSizePolicy>
-#include <QMessageBox>
 #include <QAbstractScrollArea>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QItemSelectionModel>
-#include <QCheckBox>
+
 
 class NewTableDialog : public QDialog
 {
@@ -30,7 +23,7 @@ private:
     QLineEdit *table_name_entry;
     QLineEdit *table_id_entry;
     QTableWidget *user_defined_table;
-    QStringList sql_types{"NULL", "INTEGER", "TEXT", "REAL (Number)", "BLOB (Lengthy text entry)", "CLOB"};
+    QStringList sql_types{"NULL", "INTEGER", "TEXT", "REAL", "BLOB", "CLOB"};
     QVBoxLayout *main_layout;
     QGroupBox *table_edit_area;
     QGroupBox *column_properties_area;

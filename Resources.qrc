@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>Database/LeakDetectionDatabase.db</file>
         <file>Resources/Icons/column_cube.png</file>
         <file>Resources/Icons/filter.png</file>
         <file>Resources/Icons/key.png</file>
@@ -20,5 +19,14 @@
         <file>Resources/Icons/insert.png</file>
         <file>Resources/Icons/convert.png</file>
         <file>Resources/Icons/read_write.png</file>
+        <file>Resources/Icons/cicada.png</file>
+        <file>Resources/Icons/itron.png</file>
+        <file>Resources/Icons/function.png</file>
+        <file>Resources/Icons/sqlite.png</file>
+        <file>Resources/Icons/sqledit.png</file>
+        <file>Resources/Icons/tutorial.png</file>
+        <file>Resources/Icons/import.png</file>
+        <file>Resources/Icons/import_menu.png</file>
+        <file>Resources/Icons/access_db.png</file>
     </qresource>
 </RCC>

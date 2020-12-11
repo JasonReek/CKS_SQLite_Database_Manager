@@ -10,10 +10,11 @@ namespace DateFormats
 const QStringList DATE_FORMAT_LIST = {
     QStringLiteral("MM/DD/YYYY"),QStringLiteral("DD/MM/YYYY"),QStringLiteral("YYYY/MM/DD"),
     QStringLiteral("Month D, YYYY"), QStringLiteral("M/D/YYYY"), QStringLiteral("D/M/YYYY"),
-    QStringLiteral("YYYY/M/D"), QStringLiteral("YYYYMonDD"), QStringLiteral("D Month, YYYY"),
-    QStringLiteral("YYYY, Month D"), QStringLiteral("Mon-DD-YYYY"),QStringLiteral("DD-Mon-YYYY"),
-    QStringLiteral("YYYY-Mon-DD"), QStringLiteral("Mon DD, YYYY"),QStringLiteral("DD Mon, YYYY"),
-    QStringLiteral("YYYY, Mon DD")
+    QStringLiteral("YYYY/M/D"), QStringLiteral("D Month, YYYY"), QStringLiteral("YYYY, Month D"),
+    QStringLiteral("Mon-DD-YYYY"), QStringLiteral("MM-DD-YYYY"), QStringLiteral("MM-DD-YYYY"),
+    QStringLiteral("DD-MM-YYYY"), QStringLiteral("D-M-YYYY"), QStringLiteral("YYYY-MM-DD"),
+    QStringLiteral("YYYY-M-D"), QStringLiteral("DD-Mon-YYYY"), QStringLiteral("YYYY-Mon-DD"),
+    QStringLiteral("Mon DD, YYYY"), QStringLiteral("DD Mon, YYYY"), QStringLiteral("YYYY, Mon DD")
 };
 
 const QString D = QStringLiteral("D");           // Day with not leading zeros

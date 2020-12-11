@@ -25,11 +25,11 @@ void Highlighter::highlightBlock(const QString &text)
 void Highlighter::setSQLCommands()
 {
     HighlightingRule rule;
+    QStringList sqlReadPatterns = this->createRegexList(SQLProperties::READ_COMMANDS);
+    QStringList sqlWritePatterns = this->createRegexList(SQLProperties::WRITE_COMMANDS);
+    QStringList sqlFuncPatterns = this->createRegexList(SQLProperties::FUNCTIONS);
 
     this->sqlReadFormat.setForeground(QColor("#00CCFF"));
-
-    const QStringList sqlReadPatterns = this->createRegexList(SQLProperties::READ_COMMANDS);
-
     for (const QString &pattern : sqlReadPatterns)
     {
         rule.pattern = QRegularExpression(pattern);
@@ -37,20 +37,26 @@ void Highlighter::setSQLCommands()
         this->highlightingRules.append(rule);
     }
 
-    this->sqlWriteFormat.setForeground(QColor("#FF0000"));
-
-    const QStringList sqlWritePatterns = this->createRegexList(SQLProperties::WRITE_COMMANDS);
-
+    this->sqlWriteFormat.setForeground(QColor("#EE82EE"));
     for (const QString &pattern : sqlWritePatterns)
     {
         rule.pattern = QRegularExpression(pattern);
         rule.format = sqlWriteFormat;
         this->highlightingRules.append(rule);
     }
+
+    this->funcFormat.setForeground(Qt::yellow);
+    for (const QString &pattern : sqlFuncPatterns)
+    {
+        rule.pattern = QRegularExpression(pattern);
+        rule.format = this->funcFormat;
+        this->highlightingRules.append(rule);
+    }
 }
 
 void Highlighter::setTableNames(QStringList table_names, QStringList column_names)
 {
+    this->highlightingRules.clear();
     QStringList _table_names = table_names;
     int table_count = _table_names.length();
     HighlightingRule rule;

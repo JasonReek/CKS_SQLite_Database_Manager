@@ -53,8 +53,8 @@
 
 #include "iconlabel.h"
 #include "highlighter.h"
+#include "popuplist.h"
 
-#include <iostream>
 #include <QTextEdit>
 #include <QCompleter>
 #include <QAbstractItemView>
@@ -71,10 +71,14 @@ private:
     QCompleter *c = nullptr;
     Table *_table;
     QString last_text;
-    bool using_other_model;
-    bool period_selection;
-    bool menu_popped_up;
+    char char_typed;
+    char last_char_typed;
     bool menu_clicked;
+    bool menu_visible;
+    bool using_sql_command_model;
+    bool using_function_model;
+    bool using_table_columns_model;
+
     QStandardItemModel *preserved_model;
     QAbstractItemModel *thawModel();
 
@@ -85,6 +89,7 @@ public:
     void setCompleter(QCompleter *completer);
     QCompleter *completer() const;
     bool isUsingOtherModel();
+    bool charTypedWhileUsingItsModel();
     void preserveModel(QAbstractItemModel* model);
     void rehighlight();
     // Set the hightlighters for table names and column names.
@@ -97,7 +102,7 @@ protected:
 
 private slots:
     void insertCompletion(const QString &completion);
-    void checkIfModelChanged(const QModelIndex &index);
+    void popupStatus(bool visible);
 
 signals:
     void resetModel();
